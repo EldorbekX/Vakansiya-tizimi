@@ -1,0 +1,154 @@
+{
+  "applications": [
+    {
+      "id": 1780031341239,
+      "jshshir": "84897987879879",
+      "vacancy_id": "v1",
+      "fio": "kmk",
+      "phone": "+979878979879879",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:09:01.239Z"
+    },
+    {
+      "id": 1780031520572,
+      "jshshir": "12345678901234",
+      "vacancy_id": "v1",
+      "fio": "Test Foydalanuvchi",
+      "phone": "+998901234567",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:00.572Z"
+    },
+    {
+      "id": 1780031520579,
+      "jshshir": "12345678901234",
+      "vacancy_id": "v2",
+      "fio": "Test Foydalanuvchi",
+      "phone": "+998901234567",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:00.579Z"
+    },
+    {
+      "id": 1780031520585,
+      "jshshir": "12345678901234",
+      "vacancy_id": "v3",
+      "fio": "Test Foydalanuvchi",
+      "phone": "+998901234567",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:00.585Z"
+    },
+    {
+      "id": 1780031520588,
+      "jshshir": "12345678901234",
+      "vacancy_id": "v4",
+      "fio": "Test Foydalanuvchi",
+      "phone": "+998901234567",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:00.588Z"
+    },
+    {
+      "id": 1780031520591,
+      "jshshir": "12345678901234",
+      "vacancy_id": "v5",
+      "fio": "Test Foydalanuvchi",
+      "phone": "+998901234567",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:00.591Z"
+    },
+    {
+      "id": 1780031531962,
+      "jshshir": "84897987879879",
+      "vacancy_id": "v2",
+      "fio": "dm",
+      "phone": "++98",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:11.962Z"
+    },
+    {
+      "id": 1780031539562,
+      "jshshir": "84897987879879",
+      "vacancy_id": "v4",
+      "fio": "kmk",
+      "phone": "+979878979879879",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:19.562Z"
+    },
+    {
+      "id": 1780031547091,
+      "jshshir": "84897987879879",
+      "vacancy_id": "v5",
+      "fio": "kmk",
+      "phone": "+979878979879879",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:27.091Z"
+    },
+    {
+      "id": 1780031556083,
+      "jshshir": "84897987879879",
+      "vacancy_id": "v6",
+      "fio": "kmk",
+      "phone": "+979878979879879",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:12:36.083Z"
+    },
+    {
+      "id": 1780031939206,
+      "jshshir": "87987897878978",
+      "vacancy_id": "v1",
+      "fio": ";l",
+      "phone": "44",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:18:59.206Z"
+    },
+    {
+      "id": 1780031947003,
+      "jshshir": "87987897878978",
+      "vacancy_id": "v2",
+      "fio": "d",
+      "phone": "68",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:19:07.003Z"
+    },
+    {
+      "id": 1780031952313,
+      "jshshir": "87987897878978",
+      "vacancy_id": "v3",
+      "fio": "d",
+      "phone": "5",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:19:12.313Z"
+    },
+    {
+      "id": 1780031958265,
+      "jshshir": "87987897878978",
+      "vacancy_id": "v4",
+      "fio": "dd",
+      "phone": "8",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:19:18.265Z"
+    },
+    {
+      "id": 1780031969465,
+      "jshshir": "87987897878978",
+      "vacancy_id": "v5",
+      "fio": "dd",
+      "phone": "45",
+      "month": "2026-5",
+      "status": "pending",
+      "applied_at": "2026-05-29T05:19:29.465Z"
+    }
+  ]
+}

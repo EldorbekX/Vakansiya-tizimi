@@ -1,0 +1,17 @@
+{
+  "name": "argos-vakansiyalar",
+  "version": "1.0.0",
+  "description": "Davlat vakansiyalar portali — oyiga 5 ta limit",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

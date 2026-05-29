@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vakansiyalar portali — Davlat fuqarolik xizmatchilari</title>
+<style>
+  /* ── Reset & Base ───────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #111; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+  input, select, textarea { font-family: inherit; }
+
+  /* ── Top bar ────────────────────────────────── */
+  .topbar {
+    background: #0B3E73;
+    padding: 5px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .topbar span { color: #a8c8f0; font-size: 11px; }
+  .topbar .langs a {
+    color: #a8c8f0; font-size: 11px; margin-left: 10px; cursor: pointer;
+  }
+  .topbar .langs a:hover { color: #fff; }
+
+  /* ── Header ─────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, #1a5fa8 0%, #0d4a8a 100%);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo-row { display: flex; align-items: center; gap: 14px; }
+  .emblem {
+    width: 48px; height: 48px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .logo-text .main { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .logo-text .sub  { font-size: 10px; color: #a8c8f0; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .btn-egov {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background .2s;
+  }
+  .btn-egov:hover { background: rgba(255,255,255,0.25); }
+
+  /* ── Navbar ──────────────────────────────────── */
+  .navbar {
+    background: #fff;
+    border-bottom: 2px solid #e5e7eb;
+    display: flex;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .nav-item {
+    padding: 12px 18px;
+    font-size: 13px;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color .2s;
+    font-weight: 500;
+  }
+  .nav-item:hover { color: #1a5fa8; }
+  .nav-item.active { color: #1a5fa8; border-bottom-color: #1a5fa8; }
+
+  /* ── Main content ────────────────────────────── */
+  .content { max-width: 920px; margin: 0 auto; padding: 20px 24px; }
+
+  /* ── Toast messages ──────────────────────────── */
+  .toast {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+  .toast.success { background: #dcfce7; border: 1px solid #86efac; color: #14532d; }
+  .toast.error   { background: #fee2e2; border: 1px solid #fca5a5; color: #7f1d1d; }
+  .toast.warning { background: #fef9c3; border: 1px solid #fde047; color: #713f12; }
+  .toast-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ── JSHSHIR panel ───────────────────────────── */
+  .jshshir-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .jshshir-card .field { flex: 1; }
+  .jshshir-card label { display: block; font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: 600; }
+  .jshshir-card input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 9px;
+    outline: none;
+    transition: border-color .2s;
+    letter-spacing: 1px;
+  }
+  .jshshir-card input:focus { border-color: #1a5fa8; }
+  .jshshir-card input.valid { border-color: #16a34a; }
+  .jshshir-card input.invalid { border-color: #dc2626; }
+  .btn-check {
+    background: #1a5fa8;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .2s;
+    white-space: nowrap;
+  }
+  .btn-check:hover { background: #0d4a8a; }
+  .btn-check:disabled { background: #9ca3af; cursor: not-allowed; }
+
+  /* ── Limit panel ─────────────────────────────── */
+  .limit-card {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #93c5fd;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .limit-card.show { display: flex; }
+  .limit-icon { font-size: 28px; flex-shrink: 0; }
+  .limit-info { flex: 1; }
+  .limit-title { font-size: 12px; font-weight: 700; color: #1e3a5f; margin-bottom: 7px; text-transform: uppercase; letter-spacing: .5px; }
+  .limit-track { height: 7px; background: #bfdbfe; border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
+  .limit-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: #1a5fa8;
+    transition: width .5s ease, background .3s;
+  }
+  .limit-bar.warn { background: #d97706; }
+  .limit-bar.full { background: #dc2626; }
+  .limit-sub { font-size: 11px; color: #3b82f6; }
+  .limit-count { font-size: 26px; font-weight: 800; color: #1e3a5f; min-width: 52px; text-align: right; line-height: 1; }
+  .limit-count small { display: block; font-size: 11px; font-weight: 400; color: #6b7280; text-align: center; }
+  .limit-count.full { color: #dc2626; }
+
+  /* ── Results header ──────────────────────────── */
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .results-title { font-size: 15px; font-weight: 700; color: #111; }
+  .results-count { font-size: 13px; color: #6b7280; }
+  .results-count b { color: #1a5fa8; }
+
+  /* ── Vacancy card ────────────────────────────── */
+  .vacancy-card {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    transition: border-color .2s, box-shadow .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .vacancy-card:hover { border-color: #93c5fd; box-shadow: 0 3px 12px rgba(26,95,168,0.08); }
+  .vacancy-card.applied-card { border-color: #86efac; background: #f0fdf4; }
+
+  .vc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .vc-left { flex: 1; }
+  .vc-org { font-size: 11px; color: #1a5fa8; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .3px; }
+  .vc-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 3px; }
+  .vc-dept { font-size: 12px; color: #6b7280; }
+  .vc-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; margin-left: 14px; }
+  .salary-tag { background: #dcfce7; color: #14532d; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 8px; }
+  .deadline-tag { font-size: 11px; color: #9ca3af; }
+
+  .vc-meta { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+  .meta-item { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 5px; }
+
+  .vc-footer { display: flex; justify-content: space-between; align-items: center; }
+  .vc-stats { display: flex; gap: 18px; }
+  .stat { font-size: 11px; color: #9ca3af; }
+  .stat b { color: #374151; font-weight: 700; }
+
+  /* ── Buttons ─────────────────────────────────── */
+  .btn-apply {
+    background: #1a5fa8;
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .2s, transform .1s;
+  }
+  .btn-apply:hover { background: #0d4a8a; transform: translateY(-1px); }
+  .btn-apply:active { transform: translateY(0); }
+  .btn-apply:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; transform: none; }
+  .btn-apply.done { background: #16a34a; cursor: default; transform: none; }
+  .btn-apply.over { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+  /* ── Inline form ─────────────────────────────── */
+  .inline-form {
+    background: #f8faff;
+    border: 1.5px solid #93c5fd;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 14px;
+  }
+  .form-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 3px; }
+  .form-sub { font-size: 12px; color: #1a5fa8; margin-bottom: 16px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-field label { display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px; font-weight: 600; }
+  .form-field input {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 13px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    background: #fff;
+    transition: border-color .2s;
+  }
+  .form-field input:focus { border-color: #1a5fa8; }
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  .btn-cancel {
+    background: #fff;
+    border: 1.5px solid #d1d5db;
+    color: #6b7280;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .2s;
+  }
+  .btn-cancel:hover { background: #f9fafb; }
+  .btn-submit {
+    background: #1a5fa8;
+    color: #fff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-submit:hover { background: #0d4a8a; }
+  .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+
+  /* ── Spinner ─────────────────────────────────── */
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── My applications ─────────────────────────── */
+  .my-card {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .my-card-org { font-size: 11px; color: #1a5fa8; font-weight: 700; margin-bottom: 4px; }
+  .my-card-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 3px; }
+  .my-card-date { font-size: 12px; color: #9ca3af; }
+  .status-badge {
+    background: #dcfce7;
+    color: #14532d;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ── Empty state ─────────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: #9ca3af;
+  }
+  .empty-icon { font-size: 44px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* ── Info page ───────────────────────────────── */
+  .info-card {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .info-card h2 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px; }
+  .info-card p { font-size: 13px; color: #6b7280; line-height: 1.9; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+  .info-card p:last-child { border: none; }
+  .info-card b { color: #1a5fa8; }
+
+  /* ── No-user hint ────────────────────────────── */
+  .hint-bar {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #92400e;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top bar ─────────────────────────────────────── -->
+<div class="topbar">
+  <span>O'zbekiston Respublikasi — Davlat xizmati agentligi</span>
+  <div class="langs">
+    <a>O'z</a><a>Рус</a><a>En</a>
+  </div>
+</div>
+
+<!-- ── Header ──────────────────────────────────────── -->
+<div class="header">
+  <div class="logo-row">
+    <div class="emblem">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="14" fill="#1a5fa8"/>
+        <path d="M15 3l3.5 8h8.5l-7 5.5 2.5 8.5L15 20l-7.5 5 2.5-8.5L3 11h8.5z" fill="#fff"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <div class="main">Davlat fuqarolik xizmatchilari</div>
+      <div class="sub">Vakant lavozimlarning yagona ochiq portali</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-egov">🔐 ID.GOV.UZ orqali kirish</button>
+  </div>
+</div>
+
+<!-- ── Navbar ───────────────────────────────────────── -->
+<div class="navbar">
+  <div class="nav-item active" id="nav-vacancies" onclick="switchTab('vacancies')">Vakansiyalar</div>
+  <div class="nav-item" id="nav-myapps" onclick="switchTab('myapps')">Mening arizalarim</div>
+  <div class="nav-item" id="nav-rules" onclick="switchTab('rules')">Qoidalar</div>
+</div>
+
+<!-- ── Content ──────────────────────────────────────── -->
+<div class="content">
+
+  <!-- Toastlar -->
+  <div id="toast-success" class="toast success">
+    <span class="toast-icon">✅</span>
+    <span id="toast-success-msg"></span>
+  </div>
+  <div id="toast-error" class="toast error">
+    <span class="toast-icon">❌</span>
+    <span id="toast-error-msg"></span>
+  </div>
+  <div id="toast-warning" class="toast warning">
+    <span class="toast-icon">⚠️</span>
+    <span id="toast-warning-msg"></span>
+  </div>
+
+  <!-- ══ VAKANSIYALAR ════════════════════════════════ -->
+  <div id="tab-vacancies">
+
+    <!-- JSHSHIR kiritish -->
+    <div class="jshshir-card">
+      <div class="field">
+        <label>Ariza topshirish uchun JSHSHIR kiriting</label>
+        <input
+          type="text"
+          id="jshshir-input"
+          maxlength="14"
+          placeholder="14 ta raqam (masalan: 30123456789012)"
+          oninput="onJshshirInput(this)"
+        >
+      </div>
+      <button class="btn-check" id="btn-check" onclick="checkStatus()">
+        Tekshirish
+      </button>
+    </div>
+
+    <!-- Limit holati -->
+    <div class="limit-card" id="limit-card">
+      <div class="limit-icon" id="limit-emoji">📊</div>
+      <div class="limit-info">
+        <div class="limit-title">Oylik ariza topshirish limiti</div>
+        <div class="limit-track">
+          <div class="limit-bar" id="limit-bar" style="width:0%"></div>
+        </div>
+        <div class="limit-sub" id="limit-sub">Har oyning 1-sanasida yangilanadi</div>
+      </div>
+      <div class="limit-count" id="limit-count">
+        0/5
+        <small>bu oy</small>
+      </div>
+    </div>
+
+    <!-- Vakansiyalar ro'yxati -->
+    <div class="results-header">
+      <div class="results-title">Ochiq vakansiyalar</div>
+      <div class="results-count">Jami: <b id="total-count">8</b> ta</div>
+    </div>
+
+    <div id="hint-bar" class="hint-bar">
+      ⬆️ Ariza topshirish uchun yuqorida JSHSHIR kiriting va "Tekshirish" tugmasini bosing
+    </div>
+
+    <div id="vacancy-list"></div>
+  </div>
+
+  <!-- ══ MENING ARIZALARIM ══════════════════════════ -->
+  <div id="tab-myapps" style="display:none">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">Mening arizalarim (bu oy)</div>
+    <div id="my-apps-list"></div>
+  </div>
+
+  <!-- ══ QOIDALAR ═══════════════════════════════════ -->
+  <div id="tab-rules" style="display:none">
+    <div class="info-card">
+      <h2>📋 Ariza topshirish qoidalari</h2>
+      <p>— Har bir fuqaro bir kalendar oyida <b>5 tadan ko'p bo'lmagan</b> vakansiyaga ariza topshira oladi.</p>
+      <p>— Limit <b>JSHSHIR asosida server tomonida</b> tekshiriladi — brauzer, inkognito yoki qurilma almashtirish limitni o'zgartirmaydi.</p>
+      <p>— Limit har oyning <b>1-kunida avtomatik</b> yangilanadi.</p>
+      <p>— Bitta vakansiyaga <b>qayta ariza topshirish mumkin emas</b>.</p>
+      <p>— Ariza topshirishda <b>F.I.Sh. va telefon raqamingizni</b> to'g'ri kiriting.</p>
+      <p>— Tanlov natijalari ariza muddati tugagandan so'ng <b>e-mail va SMS</b> orqali yuboriladi.</p>
+      <p>— Qo'shimcha savollar uchun: <b>info@argos.uz</b> yoki <b>+998 71 239 34 76</b></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Konfiguratsiya ─────────────────────────────────
+const API_URL = 'http://localhost:3001/api';
+const MAX_LIMIT = 5;
+
+// ── Holat ──────────────────────────────────────────
+let state = {
+  jshshir: '',
+  used: 0,
+  remaining: MAX_LIMIT,
+  appliedIds: [],
+  openFormId: null,
+  loading: false
+};
+
+// ── Vakansiyalar ma'lumotlari ──────────────────────
+const VACANCIES = [
+  {
+    id: 'v1',
+    org: 'O\'zbekiston Respublikasi Adliya vazirligi',
+    dept: 'Normativ-huquqiy hujjatlar bo\'limi',
+    title: 'Bosh mutaxassis',
+    region: 'Toshkent shahri, Yunusobod tumani',
+    salary: '4 607 629',
+    experience: 'Kamida 2 yillik staj',
+    deadline: '23 may 2026',
+    applicants: 134,
+    slots: 2
+  },
+  {
+    id: 'v2',
+    org: 'Moliya vazirligi',
+    dept: 'Davlat byudjeti boshqarmasi',
+    title: 'Yetakchi mutaxassis',
+    region: 'Toshkent shahri, Mirobod tumani',
+    salary: '3 122 847',
+    experience: 'Kamida 3 yillik staj',
+    deadline: '23 may 2026',
+    applicants: 89,
+    slots: 1
+  },
+  {
+    id: 'v3',
+    org: 'Iqtisodiyot va moliya vazirligi',
+    dept: 'Investitsiyalar tahlili bo\'limi',
+    title: 'Bo\'lim boshlig\'i',
+    region: 'Toshkent shahri, Shayxontohur tumani',
+    salary: '7 754 269',
+    experience: 'Kamida 5 yillik staj',
+    deadline: '26 may 2026',
+    applicants: 277,
+    slots: 1
+  },
+  {
+    id: 'v4',
+    org: 'Toshkent viloyati hokimligi',
+    dept: 'Ijtimoiy rivojlantirish boshqarmasi',
+    title: 'Bosh mutaxassis',
+    region: 'Toshkent viloyati, Nurafshon shahri',
+    salary: '3 450 000',
+    experience: 'Kamida 2 yillik staj',
+    deadline: '23 may 2026',
+    applicants: 56,
+    slots: 3
+  },
+  {
+    id: 'v5',
+    org: 'Raqamli texnologiyalar vazirligi',
+    dept: 'Axborot xavfsizligi bo\'limi',
+    title: 'Yetakchi mutaxassis',
+    region: 'Toshkent shahri, Mirzo Ulug\'bek tumani',
+    salary: '5 200 000',
+    experience: 'Kamida 3 yillik staj',
+    deadline: '27 may 2026',
+    applicants: 412,
+    slots: 2
+  },
+  {
+    id: 'v6',
+    org: 'Samarqand viloyati hokimligi',
+    dept: 'Qurilish va kommunal xizmatlar bo\'limi',
+    title: 'Bosh mutaxassis',
+    region: 'Samarqand viloyati, Samarqand shahri',
+    salary: '3 122 847',
+    experience: 'Kamida 1 yillik staj',
+    deadline: '23 may 2026',
+    applicants: 43,
+    slots: 2
+  },
+  {
+    id: 'v7',
+    org: 'Sog\'liqni saqlash vazirligi',
+    dept: 'Tibbiy ta\'minot boshqarmasi',
+    title: 'Yetakchi mutaxassis',
+    region: 'Toshkent shahri, Chilonzor tumani',
+    salary: '3 800 000',
+    experience: 'Kamida 2 yillik staj',
+    deadline: '28 may 2026',
+    applicants: 201,
+    slots: 1
+  },
+  {
+    id: 'v8',
+    org: 'Farg\'ona viloyati hokimligi',
+    dept: 'Ta\'lim boshqarmasi',
+    title: 'Bo\'lim boshlig\'i',
+    region: 'Farg\'ona viloyati, Farg\'ona shahri',
+    salary: '6 100 000',
+    experience: 'Kamida 4 yillik staj',
+    deadline: '26 may 2026',
+    applicants: 98,
+    slots: 1
+  }
+];
+
+// ── JSHSHIR input handler ──────────────────────────
+function onJshshirInput(el) {
+  el.value = el.value.replace(/\D/g, '');
+  const len = el.value.length;
+  el.className = len === 14 ? 'valid' : len > 0 ? 'invalid' : '';
+  document.getElementById('btn-check').disabled = len !== 14;
+}
+
+// ── Status tekshirish ──────────────────────────────
+async function checkStatus() {
+  const jshshir = document.getElementById('jshshir-input').value.trim();
+  if (!/^\d{14}$/.test(jshshir)) {
+    showToast('error', "JSHSHIR 14 ta raqamdan iborat bo'lishi kerak!");
+    return;
+  }
+
+  const btn = document.getElementById('btn-check');
+  btn.disabled = true;
+  btn.textContent = 'Tekshirilmoqda...';
+
+  try {
+    const res = await fetch(`${API_URL}/status/${jshshir}`);
+    const data = await res.json();
+
+    if (data.ok) {
+      state.jshshir = jshshir;
+      state.used = data.used;
+      state.remaining = data.remaining;
+      state.appliedIds = data.vacancy_ids || [];
+      state.openFormId = null;
+
+      updateLimitCard(data.used, data.remaining);
+      document.getElementById('limit-card').classList.add('show');
+      document.getElementById('hint-bar').style.display = 'none';
+      renderVacancies();
+
+      if (data.used >= MAX_LIMIT) {
+        showToast('warning', `Oylik limit tugagan! Bu oy ${data.used}/${MAX_LIMIT} ta ariza topshirgansiz.`);
+      } else {
+        showToast('success', `JSHSHIR topildi. Bu oy ${data.used}/${MAX_LIMIT} ta ariza topshirgansiz. Qolgan: ${data.remaining} ta.`);
+      }
+    }
+  } catch (e) {
+    showToast('error', 'Server bilan ulanishda xatolik! Server ishga tushirilganmi?');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Tekshirish';
+  }
+}
+
+// ── Limit kartani yangilash ────────────────────────
+function updateLimitCard(used, remaining) {
+  const pct = Math.round((used / MAX_LIMIT) * 100);
+  const bar = document.getElementById('limit-bar');
+  bar.style.width = pct + '%';
+  bar.className = 'limit-bar' + (used >= MAX_LIMIT ? ' full' : used >= 4 ? ' warn' : '');
+
+  const countEl = document.getElementById('limit-count');
+  countEl.innerHTML = `${used}/${MAX_LIMIT}<small>bu oy</small>`;
+  countEl.className = 'limit-count' + (used >= MAX_LIMIT ? ' full' : '');
+
+  document.getElementById('limit-emoji').textContent =
+    used >= MAX_LIMIT ? '🔴' : used >= 4 ? '🟡' : '🟢';
+
+  const d = new Date();
+  const next = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+  document.getElementById('limit-sub').textContent =
+    'Keyingi yangilanish: ' + next.toLocaleDateString('uz-UZ', {day:'numeric', month:'long', year:'numeric'});
+}
+
+// ── Vakansiyalarni render qilish ───────────────────
+function renderVacancies() {
+  const list = document.getElementById('vacancy-list');
+  let html = '';
+
+  VACANCIES.forEach(v => {
+    const isApplied   = state.appliedIds.includes(v.id);
+    const isOver      = !isApplied && state.used >= MAX_LIMIT;
+    const isFormOpen  = state.openFormId === v.id;
+    const noUser      = !state.jshshir;
+
+    let btnHtml = '';
+    if (noUser) {
+      btnHtml = `<button class="btn-apply over" disabled>JSHSHIR kiriting</button>`;
+    } else if (isApplied) {
+      btnHtml = `<button class="btn-apply done" disabled>✓ Topshirildi</button>`;
+    } else if (isOver) {
+      btnHtml = `<button class="btn-apply over" disabled>🔴 Limit tugadi</button>`;
+    } else if (isFormOpen) {
+      btnHtml = `<button class="btn-apply" style="background:#dc2626" onclick="closeForm()">✕ Bekor qilish</button>`;
+    } else {
+      btnHtml = `<button class="btn-apply" onclick="openForm('${v.id}')">Ariza topshirish →</button>`;
+    }
+
+    html += `
+    <div class="vacancy-card ${isApplied ? 'applied-card' : ''}" id="vc-${v.id}">
+      <div class="vc-top">
+        <div class="vc-left">
+          <div class="vc-org">${v.org}</div>
+          <div class="vc-title">${v.title}</div>
+          <div class="vc-dept">${v.dept}</div>
+        </div>
+        <div class="vc-right">
+          <span class="salary-tag">💰 ${v.salary} UZS</span>
+          <span class="deadline-tag">📅 ${v.deadline} gacha</span>
+        </div>
+      </div>
+      <div class="vc-meta">
+        <span class="meta-item">📍 ${v.region}</span>
+        <span class="meta-item">💼 ${v.experience}</span>
+      </div>
+      <div class="vc-footer">
+        <div class="vc-stats">
+          <span class="stat">Arizalar: <b>${v.applicants}</b></span>
+          <span class="stat">Bo'sh o'rin: <b>${v.slots}</b></span>
+        </div>
+        ${btnHtml}
+      </div>
+      ${isFormOpen ? renderForm(v) : ''}
+    </div>`;
+  });
+
+  list.innerHTML = html;
+}
+
+// ── Forma HTML ─────────────────────────────────────
+function renderForm(v) {
+  return `
+  <div class="inline-form">
+    <div class="form-title">📝 Ariza topshirish</div>
+    <div class="form-sub">${v.title} — ${v.org}</div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>F.I.Sh. (to'liq) *</label>
+        <input type="text" id="f-fio" placeholder="Karimov Jasur Aliyevich">
+      </div>
+      <div class="form-field">
+        <label>Telefon raqami *</label>
+        <input type="text" id="f-phone" placeholder="+998 90 000 00 00">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeForm()">Bekor qilish</button>
+      <button class="btn-submit" id="btn-submit-${v.id}" onclick="submitApp('${v.id}')">
+        Ariza yuborish
+      </button>
+    </div>
+  </div>`;
+}
+
+// ── Formani ochish / yopish ────────────────────────
+function openForm(id) {
+  if (!state.jshshir) { showToast('warning', 'Avval JSHSHIR kiriting!'); return; }
+  if (state.used >= MAX_LIMIT) { showToast('error', 'Oylik limit tugadi!'); return; }
+  state.openFormId = id;
+  renderVacancies();
+  setTimeout(() => {
+    const el = document.getElementById('vc-' + id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function closeForm() {
+  state.openFormId = null;
+  renderVacancies();
+}
+
+// ── Ariza yuborish ─────────────────────────────────
+async function submitApp(vacancyId) {
+  const fio   = (document.getElementById('f-fio')?.value || '').trim();
+  const phone = (document.getElementById('f-phone')?.value || '').trim();
+
+  if (!fio)   { showToast('error', "F.I.Sh. kiritilmagan!"); return; }
+  if (!phone) { showToast('error', "Telefon raqami kiritilmagan!"); return; }
+
+  const btn = document.getElementById('btn-submit-' + vacancyId);
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Yuborilmoqda...';
+
+  try {
+    const res = await fetch(`${API_URL}/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jshshir: state.jshshir,
+        vacancy_id: vacancyId,
+        fio,
+        phone
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.ok) {
+      state.appliedIds.push(vacancyId);
+      state.used = data.used;
+      state.remaining = data.remaining;
+      state.openFormId = null;
+
+      updateLimitCard(data.used, data.remaining);
+      renderVacancies();
+      renderMyApps();
+      showToast('success', `✅ Ariza qabul qilindi! Qolgan limit: ${data.remaining} ta`);
+    } else {
+      showToast('error', data.message);
+      btn.disabled = false;
+      btn.textContent = 'Ariza yuborish';
+    }
+  } catch (e) {
+    showToast('error', 'Server bilan ulanishda xatolik!');
+    btn.disabled = false;
+    btn.textContent = 'Ariza yuborish';
+  }
+}
+
+// ── Mening arizalarim ─────────────────────────────
+function renderMyApps() {
+  const el = document.getElementById('my-apps-list');
+
+  if (!state.jshshir) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🔑</div>
+      <div class="empty-text">Vakansiyalar bo'limida JSHSHIR kiriting</div>
+    </div>`;
+    return;
+  }
+
+  if (!state.appliedIds.length) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📂</div>
+      <div class="empty-text">Hali ariza topshirmadingiz</div>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  state.appliedIds.forEach(id => {
+    const v = VACANCIES.find(x => x.id === id);
+    if (!v) return;
+    html += `
+    <div class="my-card">
+      <div>
+        <div class="my-card-org">${v.org}</div>
+        <div class="my-card-title">${v.title}</div>
+        <div class="my-card-date">${v.dept}</div>
+      </div>
+      <span class="status-badge">⏳ Ko'rib chiqilmoqda</span>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// ── Tab almashtirish ───────────────────────────────
+function switchTab(tab) {
+  ['vacancies', 'myapps', 'rules'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+    document.getElementById('nav-' + t).className = 'nav-item' + (t === tab ? ' active' : '');
+  });
+  if (tab === 'myapps') renderMyApps();
+}
+
+// ── Toast ──────────────────────────────────────────
+function showToast(type, msg) {
+  ['success', 'error', 'warning'].forEach(t => {
+    document.getElementById('toast-' + t).style.display = 'none';
+  });
+  const el = document.getElementById('toast-' + type);
+  document.getElementById('toast-' + type + '-msg').textContent = msg;
+  el.style.display = 'flex';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+// ── Boshlash ───────────────────────────────────────
+document.getElementById('btn-check').disabled = true;
+renderVacancies();
+</script>
+</body>
+</html>
